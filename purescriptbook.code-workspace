@@ -1,48 +1,12 @@
 {
   "folders": [
     {
-      "path": "."
+        "path": "."
     },
     {
-      "path": "exercises/chapter2"
-    },
-    {
-      "path": "exercises/chapter3"
-    },
-    {
-      "path": "exercises/chapter4"
-    },
-    {
-      "path": "exercises/chapter5"
-    },
-    {
-      "path": "exercises/chapter6"
-    },
-    {
-      "path": "exercises/chapter7"
-    },
-    {
-      "path": "exercises/chapter8"
-    },
-    {
-      "path": "exercises/chapter9"
-    },
-    {
-      "path": "exercises/chapter10"
-    },
-    {
-      "path": "exercises/chapter11"
-    },
-    {
-      "path": "exercises/chapter12"
-    },
-    {
-      "path": "exercises/chapter13"
-    },
-    {
-      "path": "exercises/chapter14"
+        "path": "exercises/chapter2"
     }
-  ],
+],
   "settings": {
     "files.exclude": {
       "**/.git": true,
