@@ -6,6 +6,7 @@ import Control.Alternative (guard)
 import Data.Array (filter, head, length, null, tail, (..))
 import Data.Maybe (fromMaybe)
 import Data.Ord (greaterThanOrEq, lessThan, lessThanOrEq)
+import Data.Tuple (Tuple)
 
 -- Note to reader: Add your solutions to this file
 
@@ -55,3 +56,9 @@ myFactors n = do
 
 isPrime :: Int -> Boolean
 isPrime n = n > 1 && length (myFactors n) == 1
+
+cartesianProduct :: ∀ a. Array a -> Array a -> Array (Array a)
+cartesianProduct arya aryb = do
+    i <- arya
+    j <- aryb
+    [[i, j]]
