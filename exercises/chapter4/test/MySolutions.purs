@@ -2,8 +2,10 @@ module Test.MySolutions where
 
 import Prelude
 
-import Data.Array (head, null, tail)
+import Control.Alternative (guard)
+import Data.Array (filter, head, length, null, tail, (..))
 import Data.Maybe (fromMaybe)
+import Data.Ord (greaterThanOrEq, lessThan, lessThanOrEq)
 
 -- Note to reader: Add your solutions to this file
 
@@ -30,3 +32,26 @@ countEven ary =
         1 + (countEven $ fromMaybe [] $ tail ary)
     else
         countEven $ fromMaybe [] $ tail ary
+
+-- squared :: ∀ a. Ring a => Eq a => Array a -> Array a
+-- squared = map (\n -> n * n)
+squared :: Array Number -> Array Number
+squared = map (\n -> n * n)
+
+keepNonNegative :: Array Number -> Array Number
+keepNonNegative = filter $ lessThanOrEq 0.0
+
+infix 4 filter as <$?>
+
+keepNonNegativeRewrite :: Array Number -> Array Number
+keepNonNegativeRewrite ary = (lessThanOrEq 0.0) <$?> ary
+
+myFactors :: Int -> Array (Array Int)
+myFactors n = do
+    i <- 1 .. n
+    j <- i .. n
+    guard $ i * j == n
+    pure [i, j]
+
+isPrime :: Int -> Boolean
+isPrime n = n > 1 && length (myFactors n) == 1
