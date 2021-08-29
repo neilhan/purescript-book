@@ -126,7 +126,6 @@ main =
         test "Test number that uses the prime numbers less than 10" do
           Assert.equal [ 7, 5, 3, 2 ]
             $ factorize 210
-{-  Move this block comment starting point to enable more tests
     suite "Exercise Group - Folds and Tail Recursion" do
       test "Exercise - allTrue" do
         assert "all elements true"
@@ -191,6 +190,7 @@ main =
         testls "works for a directory with one file" ["/etc/hosts"] oneFileDir
         testls "works for an empty directory" [] emptyDir
 
+{-  Move this block comment starting point to enable more tests
 -}
 runChapterExamples :: TestSuite
 runChapterExamples =

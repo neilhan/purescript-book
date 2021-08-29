@@ -3,11 +3,15 @@ module Test.MySolutions where
 import Prelude
 
 import Control.Alternative (guard)
-import Data.Array (cons, filter, head, length, null, tail, (..))
+import Data.Array (concat, concatMap, cons, filter, foldl, head, length, null, sortBy, tail, (..))
 import Data.Int (quot)
-import Data.Maybe (fromMaybe)
-import Data.Ord (greaterThanOrEq, lessThan, lessThanOrEq)
-import Data.Tuple (Tuple)
+import Data.Maybe (Maybe(..), fromMaybe)
+import Data.Ord (lessThanOrEq)
+import Data.Ordering (invert)
+import Data.Path (Path(..), filename, isDirectory, ls)
+import Data.String (Pattern, contains)
+import Data.String.Utils (endsWith)
+import Test.Examples (allFiles)
 
 -- Note to reader: Add your solutions to this file
 
@@ -85,3 +89,81 @@ factorize n = f' 2 n []
                     f' divisor (quot devidend divisor) (cons divisor result)
                 else
                     f' (divisor + 1) devidend result
+
+allTrue :: Array Boolean -> Boolean
+allTrue = foldl (\coll a -> coll && a) true
+
+fibTailRec :: Int -> Int
+fibTailRec n = fib' 2 1 0 -- start from 2, need to do this. 
+    where 
+        fib' :: Int -> Int -> Int -> Int
+        fib' count preFib prePreFib= 
+            if n < 1 then
+                0
+            else if count >= n then
+                preFib + prePreFib
+            else
+                fib' (count + 1) (preFib + prePreFib) preFib
+
+-- reverse do
+reverse :: ∀ a. Array a -> Array a
+reverse = foldl (\acc a -> cons a acc) []
+
+-- mock file system exercises
+onlyFiles :: Path -> Array Path
+onlyFiles (Directory _ children) = 
+    concat [(filter (not isDirectory) children), (concatMap onlyFiles children)]
+onlyFiles _ = []
+
+-- find search a file
+whereIs :: Path -> String -> Maybe Path
+whereIs p fName = head $ do
+    d <- allFiles p
+    f <- ls d
+    guard $ filename f == (filename d) <> fName
+    pure d
+-- whereIs p fName = head $ do
+--     f <- allFiles p
+--     guard $ containsFile fName f
+--     pure f
+
+containsFile :: String -> Path -> Boolean
+containsFile fName (Directory p children) = maybeToBoolean $ head $ filter (matchFileName fName) children
+containsFile _ _ = false
+
+matchFileName :: String -> Path -> Boolean
+matchFileName fName (File n _) = endsWith fName n
+matchFileName _ _ = false
+
+maybeToBoolean :: ∀ a. Maybe a -> Boolean
+maybeToBoolean (Just _) = true
+maybeToBoolean Nothing = false
+
+-- small and large files of a path
+largestSmallest :: Path -> Array Path
+largestSmallest d@(Directory p children) = 
+    let
+        af = onlyFiles d
+        largeOrder :: Path -> Path -> Ordering
+        largeOrder (File _ s1) (File _ s2) = 
+            if s1 > s2 then
+                GT
+            else if s1 == s2 then
+                EQ
+            else LT
+        largeOrder _ _ = EQ
+        smallOrder :: Path -> Path -> Ordering
+        smallOrder p1 p2 = largeOrder p2 p1
+        largest :: Array Path -> Path
+        largest fs = fromMaybe (File "" 0) $head $ (sortBy largeOrder fs) 
+        smallest :: Array Path -> Path
+        smallest fs = fromMaybe (File "" 0) $head $ (sortBy smallOrder fs) 
+    in
+        if length af == 0 then
+            []
+        else if length af == 1 then
+            af
+        else
+            [(largest af), (smallest af)]
+
+largestSmallest _ = []
