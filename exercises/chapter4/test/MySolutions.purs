@@ -3,7 +3,8 @@ module Test.MySolutions where
 import Prelude
 
 import Control.Alternative (guard)
-import Data.Array (filter, head, length, null, tail, (..))
+import Data.Array (cons, filter, head, length, null, tail, (..))
+import Data.Int (quot)
 import Data.Maybe (fromMaybe)
 import Data.Ord (greaterThanOrEq, lessThan, lessThanOrEq)
 import Data.Tuple (Tuple)
@@ -62,3 +63,25 @@ cartesianProduct arya aryb = do
     i <- arya
     j <- aryb
     [[i, j]]
+
+
+triples :: Int -> Array (Array Int)
+triples n = do
+    i <- 1 .. n
+    j <- i .. n
+    k <- j .. n
+    guard $ i * i + j*j == k * k
+    pure [i, j, k]
+
+factorize :: Int -> Array Int
+factorize n = f' 2 n []
+    where
+        f' :: Int -> Int -> Array Int -> Array Int
+        f' _ 1 result = result
+        f' divisor devidend result = 
+            let isFactor i nn = (nn/i) * i == nn
+            in
+                if isFactor divisor devidend then
+                    f' divisor (quot devidend divisor) (cons divisor result)
+                else
+                    f' (divisor + 1) devidend result
