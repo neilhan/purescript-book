@@ -66,7 +66,7 @@ cartesianProduct :: ∀ a. Array a -> Array a -> Array (Array a)
 cartesianProduct arya aryb = do
     i <- arya
     j <- aryb
-    [[i, j]]
+    pure [i, j]
 
 
 triples :: Int -> Array (Array Int)
