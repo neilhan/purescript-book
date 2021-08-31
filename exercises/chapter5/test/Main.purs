@@ -33,7 +33,6 @@ main :: Effect Unit
 main =
   runTest do
     runChapterExamples
-    {-  Move this block comment starting point to enable more tests
     suite "Exercise Group - Simple Pattern Matching" do
       test "Exercise - factorial" do
         Assert.equal 1
@@ -66,6 +65,7 @@ main =
           $ pascal 10 5
         Assert.equal 1
           $ pascal 5 5
+{-  Move this block comment starting point to enable more tests
     suite "Exercise Group - Array and Record Patterns" do
       test "Exercise - sameCity" do
         Assert.equal true
