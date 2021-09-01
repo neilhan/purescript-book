@@ -2,6 +2,7 @@ module Test.MySolutions where
 
 import Prelude
 
+import ChapterExamples as E
 import Data.Maybe (Maybe(..))
 import Data.Picture (Shape(..), Point, origin)
 
@@ -75,3 +76,16 @@ shapeText s = case s of
     (Text _ str) -> Just str
     _ -> Nothing
 
+-- newtype - only one value
+newtype Watt = Watt Number
+
+calculateWattage :: E.Amp -> E.Volt -> Watt
+calculateWattage (E.Amp a) (E.Volt v) = Watt (a*v)
+
+-- area Shape -> number
+area :: Shape -> Number
+area shape = case shape of
+    (Circle _ r) -> 3.1415926 * r * r
+    (Rectangle _ n1 n2) -> n1 * n2
+    (Line _ _) -> 0.0
+    (Text _ _) -> 0.0

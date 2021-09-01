@@ -106,7 +106,6 @@ main =
           $ shapeText $ Rectangle origin 1.0 1.0
         Assert.equal Nothing
           $ shapeText $ Line origin { x: 1.0, y: 1.0 }
-{-  Move this block comment starting point to enable more tests
     suite "Exercise Group - Newtype" do
       test "Exercise - calculateWattage" do
         Assert.equal 60.0
@@ -122,6 +121,7 @@ main =
           $ round $ area $ Line origin { x: 2.0, y: 2.0 }
         Assert.equal 0
           $ round $ area $ Text origin "Text has no area!"
+{-  Move this block comment starting point to enable more tests
       test "Exercise - Clipped shapeBounds" do
         Assert.equal { top: -2.0, left: -2.0, right: 2.0, bottom: 2.0 }
           -- Note to users: You'll need to manually import shapeBounds
