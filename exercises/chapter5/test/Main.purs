@@ -14,7 +14,7 @@ import Test.Unit.Assert as Assert
 import Test.Unit.Main (runTest)
 
 john :: Person
-john = { name: "John Smith", address: { street: "123 Test Lane", city: "Los Angeles" } }
+john = { name: "John Smith", address: {  city: "Los Angeles", street: "123 Test Lane" } }
 
 rose :: Person
 rose = { name: "Rose Jackson", address: { street: "464 Sample Terrace", city: "Los Angeles" } }
@@ -65,7 +65,6 @@ main =
           $ pascal 10 5
         Assert.equal 1
           $ pascal 5 5
-{-  Move this block comment starting point to enable more tests
     suite "Exercise Group - Array and Record Patterns" do
       test "Exercise - sameCity" do
         Assert.equal true
@@ -107,6 +106,7 @@ main =
           $ shapeText $ Rectangle origin 1.0 1.0
         Assert.equal Nothing
           $ shapeText $ Line origin { x: 1.0, y: 1.0 }
+{-  Move this block comment starting point to enable more tests
     suite "Exercise Group - Newtype" do
       test "Exercise - calculateWattage" do
         Assert.equal 60.0
