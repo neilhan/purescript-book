@@ -128,7 +128,6 @@ main =
           Assert.equal "123"
             $ foldMap (\x -> show x)
             $ NonEmpty 1 [ 2, 3 ]
-{-  Move this block comment starting point to enable more tests
       suite "Foldable OneMore" do
         test "foldl" do
           Assert.equal 123
@@ -239,6 +238,7 @@ main =
         test "concrete" do
           Assert.equal (Self (Multiply 12))
             $ act m2 a
+{-  Move this block comment starting point to enable more tests
     suite "A Type Class for Hashes" do
       suite "arrayHasDuplicates" do
         test "no dupe" do

@@ -4,8 +4,11 @@ import Data.Generic.Rep
 import Data.Show.Generic
 import Prelude
 
-import Data.Array (length, nub, nubByEq, nubEq)
+import Data.Array (length, nub, nubByEq, nubEq, reverse, sort)
+import Data.Array.Partial (head)
 import Data.Foldable (class Foldable, foldl, foldr, foldMap)
+import Data.Maybe (Maybe(..))
+import Data.Monoid (power)
 import Data.Newtype (class Newtype, over2, wrap)
 
 newtype Point = Point {x :: Number, y :: Number}
@@ -122,3 +125,55 @@ instance foldableOneMore :: Foldable f => Foldable (OneMore f) where
     -- foldMap :: ∀ a m. Monoid m => (a -> m) -> (OneMore f a) -> m
     foldMap fn (OneMore e arr) = (fn e) <> foldMap fn arr
     -- foldMap func (OneMore val more) = (func val) <> (foldMap func more)
+
+-- dedupShape
+derive instance eqShape :: Eq Shape
+derive newtype instance eqPoint :: Eq Point
+
+dedupShapes :: Array Shape -> Array Shape
+dedupShapes = nubEq
+
+derive instance ordShape :: Ord Shape
+derive newtype instance ordPoint :: Ord Point
+
+dedupShapesFast :: Array Shape -> Array Shape
+dedupShapesFast = nub
+
+-- partial function, max
+unsafeMaximum :: Partial => Array Int -> Int
+unsafeMaximum a = head $ reverse $ sort a
+
+-- action class multiply
+class Monoid m <= Action m a where
+    act :: m -> a -> a
+
+newtype Multiply = Multiply Int
+
+instance semigroupMultiply :: Semigroup Multiply where
+    append (Multiply a) (Multiply b) = Multiply (a * b)
+
+instance monoidMultiply :: Monoid Multiply where
+    mempty = Multiply 1
+
+instance actionMultiplyInt :: Action Multiply Int where
+    act (Multiply m) b = m * b
+
+-- action multiply string
+instance actionMultiplyString :: Action Multiply String where
+    act (Multiply m) str = power str m
+
+-- action multiply on array
+instance actionArray :: Action m a => Action m (Array a) where
+    act m ary = map (act m) ary
+
+-- newtype Self ?
+newtype Self m = Self m
+
+derive newtype instance eqSelf :: Eq m => Eq (Self m)
+derive newtype instance showSelf :: Show m => Show (Self m)
+
+derive newtype instance eqMultiply :: Eq Multiply
+derive newtype instance showMultiply :: Show Multiply
+
+instance actionSelf :: Monoid m => Action m (Self m) where
+    act m (Self m2) = Self $ m <> m2
