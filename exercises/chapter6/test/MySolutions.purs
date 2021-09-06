@@ -7,6 +7,7 @@ import Prelude
 import Data.Array (length, nub, nubByEq, nubEq, reverse, sort)
 import Data.Array.Partial (head)
 import Data.Foldable (class Foldable, foldl, foldr, foldMap)
+import Data.Hashable (class Hashable, hashEqual, hashCode)
 import Data.Maybe (Maybe(..))
 import Data.Monoid (power)
 import Data.Newtype (class Newtype, over2, wrap)
@@ -177,3 +178,14 @@ derive newtype instance showMultiply :: Show Multiply
 
 instance actionSelf :: Monoid m => Action m (Self m) where
     act m (Self m2) = Self $ m <> m2
+
+-- hashable exercises
+arrayHasDuplicates :: ∀ a. Hashable a => Array a -> Boolean
+arrayHasDuplicates ary = length ary /= length (nubByEq (\a b -> hashEqual a b && a == b) ary)
+
+newtype Hour = Hour Int
+instance eqHour :: Eq Hour where
+    eq (Hour n1) (Hour n2) = mod n1 12 == mod n2 12
+
+instance hashableHour :: Hashable Hour where
+    hash (Hour n) = hashCode $ mod n 12
