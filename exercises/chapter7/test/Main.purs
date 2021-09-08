@@ -24,7 +24,6 @@ main :: Effect Unit
 main =
   runTest do
     runChapterExamples
-    {-  Move this block comment starting point to enable more tests
     suite "Exercise Group - Applicative and Effects" do
       suite "Exercise - Numeric operators that work with Maybe" do
         suite "addMaybe" do
@@ -46,6 +45,7 @@ main =
         test "divMaybe" do
           Assert.equal (Just 2)
             $ divMaybe (Just 5) (Just 2)
+{-  Move this block comment starting point to enable more tests
       suite "Exercise - Numeric operators that work with Apply" do
         suite "addApply" do
           test "Maybe Just" do
@@ -81,6 +81,7 @@ main =
           test "Either" do
             Assert.equal (Right 2 :: Either String Int)
               $ divApply (Right 5) (Right 2)
+-}
       suite "Exercise - combineMaybe" do
         suite "Array Int" do
           test "Just" do
@@ -96,6 +97,7 @@ main =
           test "Nothing" do
             Assert.equal (Nothing : Nil)
               $ combineMaybe (Nothing :: Maybe (List Char))
+{-  Move this block comment starting point to enable more tests
     suite "Exercise Group - Applicative Validation" do
       suite "Exercise - stateRegex" do
         let
