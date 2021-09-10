@@ -3,8 +3,8 @@ module Test.MySolutions where
 import Prelude
 
 import Control.Apply (lift2)
-import Data.AddressBook (Address, address)
-import Data.AddressBook.Validation (Errors, matches)
+import Data.AddressBook (Address, PhoneNumber, address)
+import Data.AddressBook.Validation (Errors, matches, nonEmpty, validateAddress, validatePhoneNumbers)
 import Data.Generic.Rep (class Generic)
 import Data.Maybe (Maybe(..))
 import Data.Show.Generic (genericShow)
@@ -88,3 +88,38 @@ instance traversableTree :: Traversable Tree where
   sequence :: ∀ a m. Applicative m => Tree (m a) -> m (Tree a)
   sequence Leaf = pure Leaf
   sequence (Branch t1 v t2) = Branch <$> (sequence t1) <*> v <*> (sequence t2)
+
+traversePreOrder :: ∀ a m b. Applicative m => (a -> m b) -> Tree a -> m (Tree b)
+traversePreOrder _ Leaf = pure Leaf
+traversePreOrder f (Branch t1 v t2) = ado
+  v <- f v
+  mt1 <- traversePreOrder f t1
+  mt2 <- traversePreOrder f t2
+  in Branch mt1 v mt2
+
+
+traversePostOrder :: ∀ a m b. Applicative m => (a -> m b) -> Tree a -> m (Tree b)
+traversePostOrder _ Leaf = pure Leaf
+traversePostOrder f (Branch t1 v t2) = ado
+  mt1 <- traversePostOrder f t1
+  mt2 <- traversePostOrder f t2
+  v <- f v
+  in Branch mt1 v mt2
+
+-- Person - optional homeAddress
+type PersonOptionalAddress
+  = { firstName :: String
+    , lastName :: String
+    , homeAddress :: Maybe Address
+    , phones :: Array PhoneNumber
+    }
+
+person :: String -> String -> Maybe Address -> Array PhoneNumber -> PersonOptionalAddress
+person firstName lastName homeAddress phones = {firstName, lastName, homeAddress, phones}
+
+validatePersonOptionalAddress :: PersonOptionalAddress -> V Errors PersonOptionalAddress
+validatePersonOptionalAddress  p =
+  person <$> nonEmpty "First Name" p.firstName
+         <*> nonEmpty "Last Name" p.lastName
+         <*> traverse validateAddress p.homeAddress
+         <*> validatePhoneNumbers "Phone Numbers" p.phones
