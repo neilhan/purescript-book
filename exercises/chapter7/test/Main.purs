@@ -138,7 +138,6 @@ main =
           Assert.equal (invalid [ "Field 'State' did not match the required format" ])
             $ validateAddressImproved
             $ address "22 Fake St" "Fake City" "C3"
-{-  Move this block comment starting point to enable more tests
     suite "Exercise Group - Traversable Functors" do
       suite "Exercise - Tree Show and Eq" do
         let
@@ -194,6 +193,7 @@ main =
             $ runWriter
             $ traverse (\x -> tell [ x ])
             $ Branch (Branch (leaf 1) 2 (leaf 3)) 4 (Branch (leaf 5) 6 (leaf 7))
+{-  Move this block comment starting point to enable more tests
       test "Exercise - traversePreOrder" do
         Assert.equal (1 .. 7)
           $ snd
