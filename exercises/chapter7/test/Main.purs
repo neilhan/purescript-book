@@ -228,7 +228,6 @@ main =
           Assert.equal (invalid ([ "Field 'City' cannot be empty" ]))
             $ validatePersonOptionalAddress
             $ examplePerson { homeAddress = (Just $ address "123 Fake St." "" "CA") }
-{-  Move this block comment starting point to enable more tests
       suite "Exercise - sequenceUsingTraverse" do
         test "Just" do
           Assert.equal (Just [ 1, 2 ])
@@ -236,6 +235,7 @@ main =
         test "Nothing" do
           Assert.equal Nothing
             $ sequenceUsingTraverse [ Just 1, Nothing ]
+{-  Move this block comment starting point to enable more tests
       suite "Exercise - traverseUsingSequence" do
         test "Just" do
           Assert.equal (Just [ 1, 2 ])

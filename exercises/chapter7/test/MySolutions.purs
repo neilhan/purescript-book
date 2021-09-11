@@ -123,3 +123,11 @@ validatePersonOptionalAddress  p =
          <*> nonEmpty "Last Name" p.lastName
          <*> traverse validateAddress p.homeAddress
          <*> validatePhoneNumbers "Phone Numbers" p.phones
+
+-- sequenceUsing Traverse
+sequenceUsingTraverse :: ∀ t a m. Applicative m => Traversable t => t (m a) -> m (t a)
+sequenceUsingTraverse tma = traverse identity tma
+
+-- traverse Using Traverse
+traverseUsingTraverse :: ∀ t m a b. Applicative m => Traversable t => (a -> m b) -> t a -> m (t b)
+traverseUsingTraverse f ta = sequence $ map f ta
