@@ -3,8 +3,8 @@ module Main where
 import Prelude
 
 import Data.AddressBook (PhoneNumber, examplePerson)
-import Data.AddressBook.Validation (Errors, validatePerson')
-import Data.Array (mapWithIndex, updateAt)
+import Data.AddressBook.Validation (Errors, PersonField(..), ValidationError(..), validatePerson')
+import Data.Array (find, mapWithIndex, updateAt)
 import Data.Either (Either(..))
 import Data.Maybe (Maybe(..), fromMaybe)
 import Data.Tuple (Tuple(..))
@@ -27,20 +27,30 @@ import Web.HTML.Window (document)
 renderValidationErrors :: Errors -> Array R.JSX
 renderValidationErrors [] = []
 renderValidationErrors xs =
-  let
-    renderError :: String -> R.JSX
-    renderError err = D.li_ [ D.text err ]
-  in
     [ D.div
-        { className: "alert alert-danger row"
-        , children: [ D.ul_ (map renderError xs) ]
+        { children: (map renderError xs)
         }
     ]
 
+renderError :: ValidationError -> R.JSX
+renderError (ValidationError errMsg f) = 
+    D.div { className: "alert alert-danger"
+        , children: [ D.text errMsg ]
+        }
+
+renderIfError :: PersonField -> Errors -> R.JSX
+renderIfError field errors =
+    let
+        maybeError = find (\(ValidationError msg f) -> f == field) errors
+    in
+        case maybeError of
+            Nothing -> D.div_ []
+            Just e -> renderError e
+
 -- Helper function to render a single form field with an
 -- event handler to update
-formField :: String -> String -> String -> (String -> Effect Unit) -> R.JSX
-formField name placeholder value setValue =
+formField :: String -> String -> PersonField -> String -> (String -> Effect Unit) -> Errors-> R.JSX
+formField name placeholder field value setValue errors =
   D.label
     { className: "form-group row"
     , children:
@@ -66,6 +76,7 @@ formField name placeholder value setValue =
                 ]
             }
         ]
+        <> [renderIfError field errors]
     }
 
 mkAddressBookApp :: Effect (ReactComponent {})
@@ -86,41 +97,48 @@ mkAddressBookApp =
       updateAt' i x xs = fromMaybe xs (updateAt i x xs)
 
       -- helper-function to render a single phone number at a given index
-      renderPhoneNumber :: Int -> PhoneNumber -> R.JSX
-      renderPhoneNumber index phone =
+      renderPhoneNumber :: Errors -> Int -> PhoneNumber -> R.JSX
+      renderPhoneNumber errors index phone =
         formField
-          (show phone."type")
-          "XXX-XXX-XXXX"
-          phone.number
-          (\s -> setPerson _ { phones = updateAt' index phone { number = s } person.phones })
+            (show phone."type")
+            "XXX-XXX-XXXX"
+            (Phone phone.type)
+            phone.number
+            (\s -> setPerson _ { phones = updateAt' index phone { number = s } person.phones })
+            errors
 
       -- helper-function to render all phone numbers
-      renderPhoneNumbers :: Array R.JSX
-      renderPhoneNumbers = mapWithIndex renderPhoneNumber person.phones
+      renderPhoneNumbers :: Errors -> Array R.JSX
+      renderPhoneNumbers errors = mapWithIndex (renderPhoneNumber errors) person.phones
     pure
       $ D.div
           { className: "container"
           , children:
-              renderValidationErrors errors
-                <> [ D.div
+                -- renderValidationErrors errors <> 
+                [ D.div
                       { className: "row"
                       , children:
                           [ D.form_
                               $ [ D.h3_ [ D.text "Basic Information" ]
-                                , formField "First Name" "First Name" person.firstName \s ->
-                                    setPerson _ { firstName = s }
-                                , formField "Last Name" "Last Name" person.lastName \s ->
-                                    setPerson _ { lastName = s }
+                                , formField "First Name" "First Name" FName person.firstName 
+                                    (\s -> setPerson _ { firstName = s })
+                                    errors
+                                , formField "Last Name" "Last Name" LName person.lastName 
+                                    (\s -> setPerson _ { lastName = s })
+                                    errors
                                 , D.h3_ [ D.text "Address" ]
-                                , formField "Street" "Street" person.homeAddress.street \s ->
-                                    setPerson _ { homeAddress { street = s } }
-                                , formField "City" "City" person.homeAddress.city \s ->
-                                    setPerson _ { homeAddress { city = s } }
-                                , formField "State" "State" person.homeAddress.state \s ->
-                                    setPerson _ { homeAddress { state = s } }
+                                , formField "Street" "Street" Street person.homeAddress.street 
+                                    (\s -> setPerson _ { homeAddress { street = s } })
+                                    errors
+                                , formField "City" "City" City person.homeAddress.city 
+                                    (\s -> setPerson _ { homeAddress { city = s } })
+                                    errors
+                                , formField "State" "State" State person.homeAddress.state 
+                                    (\s -> setPerson _ { homeAddress { state = s } })
+                                    errors
                                 , D.h3_ [ D.text "Contact Information" ]
                                 ]
-                              <> renderPhoneNumbers
+                              <> renderPhoneNumbers errors
                           ]
                       }
                   ]
