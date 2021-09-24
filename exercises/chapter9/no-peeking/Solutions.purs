@@ -64,9 +64,7 @@ recurseFiles file = do
     c -> do
       let
         dir = Path.dirname file
-
-        files = split (Pattern "\n") contents
-
+        files = split (Pattern "\n") c
         filesFromRoot = map (\f -> Path.concat [ dir, f ]) files
       arrarr <- parTraverse recurseFiles filesFromRoot
       pure $ file : concat arrarr

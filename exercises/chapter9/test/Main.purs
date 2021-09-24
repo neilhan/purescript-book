@@ -50,13 +50,10 @@ main =
       files <- readdir outDir
       for_ files \f -> unlink $ Path.concat [ outDir, f ]
     runChapterExamples
-    {-  Move this block comment starting point to enable more tests
     test "concatenateFiles" do
       let
         inFoo = Path.concat [ inDir, "foo.txt" ]
-
         inBar = Path.concat [ inDir, "bar.txt" ]
-
         outFooBar = Path.concat [ outDir, "foobar.txt" ]
       concatenateFiles inFoo inBar outFooBar
       -- Check for valid concat
@@ -67,9 +64,7 @@ main =
     test "concatenateMany" do
       let
         inFiles = map (\i -> Path.concat [ inDir, "many", "file" <> show i <> ".txt" ]) $ 1 .. 9
-
         outFile = Path.concat [ outDir, "manyConcat.txt" ]
-
         expectedOutFile = Path.concat [ inDir, "manyConcat.txt" ]
       concatenateMany inFiles outFile
       -- Check for valid concat
@@ -130,11 +125,11 @@ main =
       test "one file" do
         let
           file = Path.concat [ recurseDir, "c/unused.txt" ]
-
           expected = [ file ]
         actual <- recurseFiles file
         Assert.equal (Set.fromFoldable expected) $ Set.fromFoldable actual
 
+{-  Move this block comment starting point to enable more tests
 -}
 runChapterExamples :: TestSuite
 runChapterExamples = do
