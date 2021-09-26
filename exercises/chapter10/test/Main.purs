@@ -25,7 +25,6 @@ main :: Effect Unit
 main =
   runTest do
     runChapterExamples
-    {-  Move this block comment starting point to enable more tests
     suite "Exercise Group - Calling JavaScript" do
       suite "Exercise - volumeFn" do
         test "1 2 3" do
@@ -61,8 +60,7 @@ main =
           helper testName poly r1 r2 =
             test testName do
               Assert.equal (orderCpx $ Pair r1 r2)
-                $ orderCpx
-                $ quadraticRoots poly
+                $ orderCpx $ quadraticRoots poly
         helper "Real"
           { a: 1.0, b: 2.0, c: -3.0 }
           { real: 1.0, imag: 0.0 }
@@ -79,6 +77,7 @@ main =
           { a: 3.0, b: -6.0, c: 3.0 }
           { real: 1.0, imag: 0.0 }
           { real: 1.0, imag: 0.0 }
+{-  Move this block comment starting point to enable more tests
       suite "Exercise - toMaybe" do
         test "Nothing" do
           Assert.equal Nothing
