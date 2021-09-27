@@ -53,3 +53,20 @@ exports.valuesOfMapImpl = m => {
     const inMap = new Map(m)
     return Array.from(new Set(inMap.values()))
 }
+
+exports.quadraticRootsSetImpl = q => {
+    // returns Set of Complex
+    // poly: {a, b, c}
+    const poly = q
+    const p1 = (- poly.b / (2.0 * poly.a))
+    const p2_ = poly.b * poly.b - 4 * poly.a * poly.c
+    if (p2_ >= 0) {
+        return [({ real: p1 + Math.sqrt(p2_) / (2.0 * poly.a), imag: 0.0 }),
+        ({ real: p1 - Math.sqrt(p2_) / (2.0 * poly.a), imag: 0.0 })]
+    } else {
+        return [({ real: p1, imag: + Math.sqrt(-p2_) / (2.0 * poly.a) }),
+        ({ real: p1, imag: - Math.sqrt(-p2_) / (2.0 * poly.a) })]
+    }
+}
+
+exports.quadraticRootsSafeImpl = exports.quadraticRootsSetImpl
