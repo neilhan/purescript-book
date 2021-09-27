@@ -77,7 +77,6 @@ main =
           { a: 3.0, b: -6.0, c: 3.0 }
           { real: 1.0, imag: 0.0 }
           { real: 1.0, imag: 0.0 }
-{-  Move this block comment starting point to enable more tests
       suite "Exercise - toMaybe" do
         test "Nothing" do
           Assert.equal Nothing
@@ -95,6 +94,7 @@ main =
           Assert.equal (Right $ Set.fromFoldable [])
             $ valuesOfMap
             $ Map.fromFoldable []
+{-  Move this block comment starting point to enable more tests
       suite "Exercise - valuesOfMapGeneric" do
         test "String Int" do
           Assert.equal (Right $ Set.fromFoldable [ 1, 2 ])

@@ -33,9 +33,23 @@ exports.quadraticRootsPair = pair => poly => {
     const p2_ = poly.b * poly.b - 4 * poly.a * poly.c
     if (p2_ >= 0) {
         return pair({ real: p1 + Math.sqrt(p2_) / (2.0 * poly.a), imag: 0.0 })(
-                { real: p1 - Math.sqrt(p2_) / (2.0 * poly.a), imag: 0.0 })
+            { real: p1 - Math.sqrt(p2_) / (2.0 * poly.a), imag: 0.0 })
     } else {
-        return pair( { real: p1, imag: + Math.sqrt(-p2_) / (2.0 * poly.a) })(
+        return pair({ real: p1, imag: + Math.sqrt(-p2_) / (2.0 * poly.a) })(
             { real: p1, imag: - Math.sqrt(-p2_) / (2.0 * poly.a) })
     }
+}
+
+exports.toMaybeImpl = just => nothing => v => {
+    if (v === undefined) {
+        return nothing
+    } else {
+        return just(v)
+    }
+}
+
+// valuesOfMap
+exports.valuesOfMapImpl = m => {
+    const inMap = new Map(m)
+    return Array.from(new Set(inMap.values()))
 }
