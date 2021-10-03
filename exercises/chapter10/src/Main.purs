@@ -14,7 +14,7 @@ import Effect (Effect)
 import Effect.Alert (alert)
 import Effect.Console (log)
 import Effect.Exception (throw)
-import Effect.Storage (getItem, setItem)
+import Effect.Storage (confirm, getItem, removeItem, setItem)
 import React.Basic.DOM as D
 import React.Basic.DOM.Events (targetValue)
 import React.Basic.Events (handler, handler_)
@@ -112,6 +112,14 @@ mkAddressBookApp =
             setItem "person" $ stringify $ encodeJson validPerson
             log "Saved"
 
+      reset :: Effect Unit
+      reset = do
+        log "Reset, removeItem"
+        choice <- confirm "Reset?"
+        case choice of
+            true -> removeItem "person"
+            _ -> pure unit
+
       -- helper-function to render saveButton
       saveButton :: R.JSX
       saveButton =
@@ -122,6 +130,20 @@ mkAddressBookApp =
                   { className: "btn-primary btn"
                   , onClick: handler_ validateAndSave
                   , children: [ D.text "Save" ]
+                  }
+              ]
+          }
+
+      -- helper-function to render saveButton
+      resetButton :: R.JSX
+      resetButton =
+        D.label
+          { className: "form-group row col-form-label"
+          , children:
+              [ D.button
+                  { className: "btn-primary btn"
+                  , onClick: handler_ reset
+                  , children: [ D.text "Reset" ]
                   }
               ]
           }
@@ -152,7 +174,7 @@ mkAddressBookApp =
                           ]
                       }
                   ]
-                <> [ saveButton ]
+                <> [ saveButton, resetButton ]
           }
 
 processItem :: Json -> Either String Person
