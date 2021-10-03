@@ -7,12 +7,20 @@ import Data.Foldable (product)
 import Data.Maybe (fromMaybe)
 import Data.Path (Path, ls)
 
-fact :: Int -> Int
-fact n =
+-- fact :: Int -> Int
+-- fact n =
+--   if n == 0 then
+--     1
+--   else
+--     n * fact (n - 1)
+-- ANCHOR: factorial
+factorial :: Int -> Int
+factorial n =
   if n == 0 then
     1
   else
-    n * fact (n - 1)
+    n * factorial (n - 1)
+-- ANCHOR_END: factorial
 
 fib :: Int -> Int
 fib n =
@@ -49,18 +57,26 @@ factorsV3 n = do
   guard $ i * j == n
   pure [ i, j ]
 
-factTailRec :: Int -> Int -> Int
-factTailRec n acc = 
+-- factTailRec :: Int -> Int -> Int
+-- factTailRec n acc = 
+--   if n == 0
+--     then acc
+--     else factTailRec (n - 1) (acc * n)
+
+-- ANCHOR: factorialTailRec
+factorialTailRec :: Int -> Int -> Int
+factorialTailRec n acc =
   if n == 0
     then acc
-    else factTailRec (n - 1) (acc * n)
+    else factorialTailRec (n - 1) (acc * n)
+-- ANCHOR_END: factorialTailRec
 
 lengthTailRec :: forall a. Array a -> Int
 lengthTailRec arr = length' arr 0
   where
   length' :: Array a -> Int -> Int
   length' arr' acc =
-    if null arr' 
+    if null arr'
       then acc
       else length' (fromMaybe [] $ tail arr') (acc + 1)
 
