@@ -70,3 +70,14 @@ exports.quadraticRootsSetImpl = q => {
 }
 
 exports.quadraticRootsSafeImpl = exports.quadraticRootsSetImpl
+
+// string -> array array Int
+exports._myJsonParse = (succ, fail, s) => {
+    try {
+        return succ(JSON.parse(s))
+    } catch (e) {
+        return fail(e.message)
+    }
+}
+
+// 6 tree EncodeJson, DecodeJson Tree type

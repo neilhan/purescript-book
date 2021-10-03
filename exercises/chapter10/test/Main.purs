@@ -150,7 +150,6 @@ main =
           { a: 3.0, b: -6.0, c: 3.0 }
           { real: 1.0, imag: 0.0 }
           { real: 1.0, imag: 0.0 }
-{-  Move this block comment starting point to enable more tests
       test "Exercise - parseAndDecodeArray2D" do
         let
           arr = [ [ 1, 2, 3 ], [ 4, 5 ], [ 6 ] ]
@@ -207,6 +206,7 @@ main =
             (decoded :: Either _ IntOrString) = decodeJson $ encodeJson 1.5
           Assert.assert "Got a Right, should be Left" $ isLeft decoded
 
+{-  Move this block comment starting point to enable more tests
 -}
 -- Put in ascending order by real, then imag components
 orderCpx :: Pair Complex -> Pair Complex
