@@ -3,7 +3,7 @@ module Test.Main where
 import Prelude (Unit, discard, negate, ($), (*>), (<>), (==))
 import Test.MySolutions
 import Game
-import Test.NoPeeking.Solutions  -- This line should have been automatically deleted by resetSolutions.sh. See Chapter 2 for instructions.
+-- import Test.NoPeeking.Solutions  -- This line should have been automatically deleted by resetSolutions.sh. See Chapter 2 for instructions.
 
 import Control.Monad.Except (runExceptT)
 import Control.Monad.RWS (RWSResult(..), runRWS)
@@ -29,7 +29,6 @@ main :: Effect Unit
 main =
   runTest do
     test "" success
-{-  Move this block comment starting point to enable more tests
     suite "Exercises Group - The State Monad" do
       suite "testParens" do
         let
@@ -44,6 +43,7 @@ main =
         runTestParens false ")"
         runTestParens false "(()()"
         runTestParens false ")("
+{-  Move this block comment starting point to enable more tests
     suite "Exercises Group - The Reader Monad" do
       suite "indents" do
         let
