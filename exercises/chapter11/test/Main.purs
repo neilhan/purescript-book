@@ -43,7 +43,6 @@ main =
         runTestParens false ")"
         runTestParens false "(()()"
         runTestParens false ")("
-{-  Move this block comment starting point to enable more tests
     suite "Exercises Group - The Reader Monad" do
       suite "indents" do
         let
@@ -82,6 +81,7 @@ main =
         test "c = 15" do
           Assert.equal expected_15
             $ collatz 15
+{-  Move this block comment starting point to enable more tests
     suite "Exercises Group - Monad Transformers" do
       suite "safeDivide" do
         test "should fail when dividing by zero" do
