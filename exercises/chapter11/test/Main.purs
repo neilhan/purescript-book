@@ -81,7 +81,6 @@ main =
         test "c = 15" do
           Assert.equal expected_15
             $ collatz 15
-{-  Move this block comment starting point to enable more tests
     suite "Exercises Group - Monad Transformers" do
       suite "safeDivide" do
         test "should fail when dividing by zero" do
@@ -98,6 +97,7 @@ main =
         test "should fail if string could not be parsed" do
           Assert.equal (Left ["Could not parse"])
             $ runParser (string "abc") "foobar"
+{-  Move this block comment starting point to enable more tests
       suite "indents with ReaderT and WriterT" do
         let
           expectedText =

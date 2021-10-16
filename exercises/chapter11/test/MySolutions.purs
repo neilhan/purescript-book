@@ -2,14 +2,18 @@ module Test.MySolutions where
 
 import Prelude
 
+import Control.Monad.Error.Class (throwError)
+import Control.Monad.Except (ExceptT, lift)
 import Control.Monad.Reader (Reader, ask, local, runReader)
-import Control.Monad.State (State, evalState, execState, get, gets, modify, modify_)
-import Control.Monad.Writer (Writer, runWriter, tell)
+import Control.Monad.State (State, StateT, evalState, execState, get, gets, modify, modify_, put)
+import Control.Monad.Writer (Writer, WriterT, runWriter, tell)
 import Data.Array (filter)
 import Data.Foldable (traverse_)
+import Data.Identity (Identity)
+import Data.Maybe (Maybe(..))
 import Data.Monoid (power)
 import Data.Monoid.Additive (Additive(..))
-import Data.String (joinWith)
+import Data.String (Pattern(..), joinWith, stripPrefix)
 import Data.String.CodeUnits (toCharArray)
 import Data.Traversable (sequence, traverse)
 import Data.Tuple (Tuple)
@@ -74,3 +78,21 @@ collatz nn = runWriter (col 0 nn)
             col (c + 1) (n / 2)
         else
             col (c  + 1) (n * 3 + 1)
+
+-- ExceptT
+safeDivide :: Int -> Int -> ExceptT String Identity Int
+safeDivide _ 0 = throwError "Divide by zero!"
+safeDivide a b = do pure $ a / b
+
+type Errors = Array String
+type Log = Array String
+type Parser = StateT String (WriterT Log (ExceptT Errors Identity))
+string :: String -> Parser String
+string p = do
+  s <- get
+  lift $ tell ["The state is " <> s]
+  case stripPrefix (Pattern p) s of
+    Just r -> do 
+        put r
+        pure p
+    Nothing -> lift $ lift $ throwError ["Could not parse"]
