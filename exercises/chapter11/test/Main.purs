@@ -97,7 +97,6 @@ main =
         test "should fail if string could not be parsed" do
           Assert.equal (Left ["Could not parse"])
             $ runParser (string "abc") "foobar"
-{-  Move this block comment starting point to enable more tests
       suite "indents with ReaderT and WriterT" do
         let
           expectedText =
@@ -114,7 +113,6 @@ main =
                   line' "So am I"
                   indent' $ do
                     line' "I am even more indented"
-
     suite "Exercises Group - Monad Comprehensions/backtracking" do
       suite "parser" do
         let
@@ -143,6 +141,7 @@ main =
           Assert.equal (Left ["Could not parse","Could not parse"])
             $ runParser asOrBs "foobar"
 
+{-  Move this block comment starting point to enable more tests
     suite "Exercises Group - The RWS Monad" do
       let
         runGame :: Game Unit -> RWSResult GameState Unit (List String)

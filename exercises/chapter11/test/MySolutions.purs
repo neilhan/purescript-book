@@ -2,17 +2,19 @@ module Test.MySolutions where
 
 import Prelude
 
+import Control.Alt ((<|>))
 import Control.Monad.Error.Class (throwError)
 import Control.Monad.Except (ExceptT, lift)
-import Control.Monad.Reader (Reader, ask, local, runReader)
+import Control.Monad.Reader (Reader, ReaderT, ask, local, runReader, runReaderT)
 import Control.Monad.State (State, StateT, evalState, execState, get, gets, modify, modify_, put)
-import Control.Monad.Writer (Writer, WriterT, runWriter, tell)
-import Data.Array (filter)
+import Control.Monad.Writer (Writer, WriterT, execWriterT, runWriter, tell)
+import Data.Array (filter, fold, some)
 import Data.Foldable (traverse_)
 import Data.Identity (Identity)
 import Data.Maybe (Maybe(..))
 import Data.Monoid (power)
 import Data.Monoid.Additive (Additive(..))
+import Data.Newtype (unwrap)
 import Data.String (Pattern(..), joinWith, stripPrefix)
 import Data.String.CodeUnits (toCharArray)
 import Data.Traversable (sequence, traverse)
@@ -41,6 +43,7 @@ testParens s =
         0 -> true
         _ -> false
 
+-- ---------------------
 -- Reader exercises --
 type Level = Int
 type Doc = (Reader Level) String
@@ -59,6 +62,22 @@ cat = sequence >=> joinWith "\n" >>> pure
 render :: Doc -> String
 render r = runReader r 0
 
+-- ---------------------
+type Doc' = (WriterT (Array String) (ReaderT Level Identity)) Unit
+
+line' :: String -> Doc'
+line' str = do
+  level <- lift $ ask -- TODO try without $
+  tell [(power "  " level) <> str]
+  pure unit
+
+indent' :: Doc' -> Doc'
+indent' = local $ (+) 1
+
+render' :: Doc' -> String
+render' doct = joinWith "\n" $ unwrap $ runReaderT (execWriterT doct) 0
+
+-- ---------------------
 -- writer exercises
 sumArrayWriter :: Array Int -> Writer (Additive Int) Unit 
 sumArrayWriter = traverse_ \i -> do 
@@ -87,12 +106,32 @@ safeDivide a b = do pure $ a / b
 type Errors = Array String
 type Log = Array String
 type Parser = StateT String (WriterT Log (ExceptT Errors Identity))
+-- string :: String -> Parser String
+-- string p = do
+--   s <- get
+--   lift $ tell ["The state is " <> s]
+--   case stripPrefix (Pattern p) s of
+--     Just r -> do 
+--         put r
+--         pure p
+--     Nothing -> lift $ lift $ throwError ["Could not parse"]
+
+
 string :: String -> Parser String
 string p = do
   s <- get
-  lift $ tell ["The state is " <> s]
+  tell ["The state is " <> s]
   case stripPrefix (Pattern p) s of
     Just r -> do 
         put r
         pure p
-    Nothing -> lift $ lift $ throwError ["Could not parse"]
+    Nothing -> throwError ["Could not parse"]
+
+asFollowedByBs :: Parser String
+asFollowedByBs = do
+  a_s <- some $ string "a"
+  b_s <- some $ string "b"
+  pure $ fold $ a_s <> b_s
+
+asOrBs :: Parser String
+asOrBs = fold <$> some (string "a" <|> string "b")
